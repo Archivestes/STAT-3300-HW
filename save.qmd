@@ -1,0 +1,35 @@
+---
+title: "HW 1 (Tyler)"
+---
+
+## 1 Instructions/Setup
+Make sure you have a GitHub account. In your GitHub account, create a GitHub repository named STAT3000.
+
+Create an RStudio Project, e.g., stat3000, connected to the GitHub repo (clone or connect existing).
+
+Answer each item inside this Quarto file. Show commands/code where requested.
+
+## 2 Tasks
+Project folders
+In your project root, create the folders: hw/, img/, data/, code/, docs/.
+Provide either:
+
+the Unix commands you used, or
+the R commands you used
+
+```
+# Your commands here
+mkdir hw/
+mkdir code/
+mkdir data/
+mkdir docs/
+mkdir ing/
+
+```
+
+RStudio project + Quarto document
+Create a Quarto document named hw1.qmd (this file).
+Include a screenshot of your RStudio session showing:
+
+Files pane (project structure)
+Git pane (if available)
