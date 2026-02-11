@@ -146,7 +146,7 @@ points(c(x1,x2),c(0,0),col="red")
     ```         
     # Your commands here
     
-    cp hw/hw1.qmd code/quadratic.qmd #need to do directory(the pathing to the thing)
+    cp hw1.qmd code/quadratic.qmd
     
     ```
 
@@ -154,43 +154,21 @@ points(c(x1,x2),c(0,0),col="red")
 
     Edit `code/quadratic.qmd` so it reads `a`, `b`, `c` from `data/coefs.txt` using a **relative path**. In *this* document, show the R code you used (it should also appear in `quadratic.qmd`).
 
-```{r}        
-# Your code here (example outline):
+    ```         
+    # Your code here (example outline):
 
-coefs <- scan("data/coefs.txt") #read numbers/string and return a vector
+    # coefs <- scan("data/coefs.txt") #read numbers/string and return a vector
 
-a <- coefs[1]; b <- coefs[2]; c <- coefs[3]
+    # a <- coefs[1]; b <- coefs[2]; c <- coefs[3]
 
-# then compute real roots again
-a <- 2
-b <- -5
-c <- -3
-x <- 0
-
-disc <- b^2 - 4*a*c
-if (disc <0) {
-  cat("The descriminet is negitive there for not roots")
-  } else {
-    x1<-1/(2*a)*(-b+sqrt(disc))
-    x2<-1/(2*a)*(-b-sqrt(disc))
-    cat("The roots are x1=" ,x1,"x2 =",x2) }
-```
+    # then compute real roots again
+    ```
 
 9.  **Switch to an absolute path and test portability**
 
     In `code/quadratic.qmd`, replace the relative path with: `file.path(getwd(), "data/coefs.txt")` Render it once to confirm it works.
 
-    Then Copy the entire project folder** to a new folder name (e.g., `RtmpXXXX`). Re-render `code/quadratic.qmd`. Does it still render? Briefly explain what happened, then switch back to a relative path and confirm it renders again.
-  ```
-  #its the cp - r thing again 
-  
-  ```{r}
-  coefs<- scan(file.path(getwd(),"../data/coefs.txt"))
-  a<-coefs[1]: b<-coefs[2]: c<-coefs[3]
-  
-  disc <-b^2 - 4*a*c
-  
-  ```
+    Then **move the entire project folder** to a new folder name (e.g., `RtmpXXXX`). Re-render `code/quadratic.qmd`. Does it still render? Briefly explain what happened, then switch back to a relative path and confirm it renders again.
 
 10. **Render to PDF and publish to GitHub Pages-style docs folder**
 
