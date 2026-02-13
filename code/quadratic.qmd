@@ -44,13 +44,13 @@ format:
 
     -   Files pane (project structure)
 
-![Screenshot 2026-02-02 160425.png](ing/Screenshot 2026-02-02 160425.png)
+![Screenshot 2026-02-02 160425.png](ing/Screenshot%202026-02-02%20160425.png)
 
 ```         
 -   Git pane (if available)
 ```
 
-![Screenshot 2026-02-02 160600.png](ing/Screenshot 2026-02-02 160600.png)
+![Screenshot 2026-02-02 160600.png](ing/Screenshot%202026-02-02%20160600.png)
 
 ```         
 
@@ -60,12 +60,12 @@ format:
 
 -   the repo URL <https://github.com/Archivestes/STAT-3300-HW>
 
--   a screenshot showing the repo page on GitHub ![Screenshot 2026-02-02 162407.png](ing/Screenshot 2026-02-02 162407.png)
+-   a screenshot showing the repo page on GitHub ![Screenshot 2026-02-02 162407.png](ing/Screenshot%202026-02-02%20162407.png)
 
 3.  **Create and include a plot image**\
     Create a simple plot in R (any plot you like), save it as `img/plot.png`, and include it below.
-    
-``` {r}        
+
+```{r}
 # Example idea (you can change it):
 png("../ing/cars.png", width = 800, height = 500) #open png device 
 plot(cars)
@@ -78,31 +78,25 @@ dev.off() # close the device
 
     -   If the discriminant is negative, print a message like `"No real roots"`.
 
-     
+    \# a \<- 2 \# b \<- -5 \# c \<- -3 \# \# disc \<- b\^2 - 4*a*c \# disc
 
-      # a <- 2
-      # b <- -5
-      # c <- -3
-      # 
-      # disc <- b^2 - 4*a*c
-      # disc
+    \# Your code here to print only real roots
 
-      # Your code here to print only real roots
-```{r}
-a <- 2
-b <- -5
-c <- -3
-x <- 0
+    ```{r}
+    a <- 2
+    b <- -5
+    c <- -3
+    x <- 0
 
-disc <- b^2 - 4*a*c
-if (disc <0) {
-  cat("The descriminet is negitive there for not roots")
-  } else {
-    x1<-1/(2*a)*(-b+sqrt(disc))
-    x2<-1/(2*a)*(-b-sqrt(disc))
-    cat("The roots are x1=" ,x1,"x2 =",x2) }
+    disc <- b^2 - 4*a*c
+    if (disc <0) {
+      cat("The descriminet is negitive there for not roots")
+      } else {
+        x1<-1/(2*a)*(-b+sqrt(disc))
+        x2<-1/(2*a)*(-b-sqrt(disc))
+        cat("The roots are x1=" ,x1,"x2 =",x2) }
 
-```
+    ```
 
 5.  **Graph the quadratic on a specified interval** Make a graph of $f(x)$ versus $x$ for $x \in (-6, 6)$. Add:
 
@@ -123,8 +117,10 @@ points(c(x1,x2),c(0,0),col="red")
 
 ```
 
-    # Hint: use plot(x, fx, type="l") and abline(h=0)
-    ```
+````         
+# Hint: use plot(x, fx, type="l") and abline(h=0)
+```
+````
 
 6.  **Write coefficients to a text file using Unix** Use Unix to create a file `data/coefs.txt` containing a single line with:
 
@@ -136,18 +132,16 @@ points(c(x1,x2),c(0,0),col="red")
 
     ```         
     # Your commands here
-    
+
     echo "2 -5 -3" data/coefs.txt
-    
     ```
 
 7.  **Copy the Quarto file using Unix** Use Unix to copy `hw1.qmd` into `code/` and name it `quadratic.qmd`. Show the Unix command(s):
 
     ```         
     # Your commands here
-    
+
     cp hw1.qmd code/quadratic.qmd
-    
     ```
 
 8.  **Read coefficients from file using a relative path**
@@ -183,8 +177,6 @@ points(c(x1,x2),c(0,0),col="red")
 
 -   `Add initial project structure`
 
-
-
 -   `Add quadratic root computation`
 
 -   `Add rendering output to docs`
@@ -198,4 +190,4 @@ points(c(x1,x2),c(0,0),col="red")
 12. **Push to GitHub** Push your work to GitHub. In this document, include:
 
 -   a screenshot of your GitHub repo showing the folders `img/`, `data/`, `code/`, `docs/`
--   the link to the rendered PDF file in your repo 
+-   the link to the rendered PDF file in your repo

@@ -67,7 +67,7 @@ format:
     
 ``` {r}        
 # Example idea (you can change it):
-png("../ing/cars.png", width = 800, height = 500) #open png device 
+png("ing/cars.png", width = 800, height = 500) #open png device 
 plot(cars)
 dev.off() # close the device
 ```
@@ -183,14 +183,17 @@ if (disc <0) {
     Then Copy the entire project folder** to a new folder name (e.g., `RtmpXXXX`). Re-render `code/quadratic.qmd`. Does it still render? Briefly explain what happened, then switch back to a relative path and confirm it renders again.
   ```
   #its the cp - r thing again 
+  and it still works it dosent matter where the directory is
   
-  ```{r}
-  coefs<- scan(file.path(getwd(),"../data/coefs.txt"))
-  a<-coefs[1]: b<-coefs[2]: c<-coefs[3]
+```{r}
+coefs <- scan(file.path(getwd(),"data/coefs.txt"))
+a <- coefs[1]
+b <- coefs[2]
+c <- coefs[3]
   
-  disc <-b^2 - 4*a*c
+disc <- b^2 - 4*a*c
   
-  ```
+```
 
 10. **Render to PDF and publish to GitHub Pages-style docs folder**
 
