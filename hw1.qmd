@@ -1,12 +1,17 @@
 ---
-title: "Problem set 1"
-date: "2026-02-??"
+title: "Problem set 1" 
+date: "2026-02-16"
 
-format:
+format: 
   html:
-    toc: true
-    number-sections: true
+    self-contained: true
+    toc: true 
+    number-sections: true 
 ---
+
+```{r}
+library(dslabs)
+```
 
 ## Instructions/Setup
 
@@ -27,7 +32,7 @@ format:
     -   the Unix commands you used, or
     -   the R commands you used
 
-    ```         
+    ```
     # Your commands here
 
     # Linux command
@@ -44,13 +49,13 @@ format:
 
     -   Files pane (project structure)
 
-![Screenshot 2026-02-02 160425.png](ing/Screenshot 2026-02-02 160425.png)
+![Screenshot 2026-02-02 160425.png](ing/Screenshot%202026-02-02%20160425.png)
 
 ```         
 -   Git pane (if available)
 ```
 
-![Screenshot 2026-02-02 160600.png](ing/Screenshot 2026-02-02 160600.png)
+![Screenshot 2026-02-02 160600.png](ing/Screenshot%202026-02-02%20160600.png)
 
 ```         
 
@@ -60,49 +65,43 @@ format:
 
 -   the repo URL <https://github.com/Archivestes/STAT-3300-HW>
 
--   a screenshot showing the repo page on GitHub ![Screenshot 2026-02-02 162407.png](ing/Screenshot 2026-02-02 162407.png)
+-   a screenshot showing the repo page on GitHub ![Screenshot 2026-02-02 162407.png](ing/Screenshot%202026-02-02%20162407.png)
 
 3.  **Create and include a plot image**\
     Create a simple plot in R (any plot you like), save it as `img/plot.png`, and include it below.
-    
-``` {r}        
+
+```{r}
 # Example idea (you can change it):
-png("ing/cars.png", width = 800, height = 500) #open png device 
+png("ing/cars.png", width = 800, height = 500, res = 120) #open png device 
 plot(cars)
-dev.off() # close the device
+dev.off()# close the device
 ```
 
-![](plot.png)
+![](ing/cars.png)
 
 4.  **Define a function and compute real roots** In this document, define coefficients $a=2$, $b=-5$, $c=-3$. Consider $f(x) = ax^2 + bx + c$. Print the **real** solutions of $f(x)=0$ (if any).
 
     -   If the discriminant is negative, print a message like `"No real roots"`.
 
-     
+    \# a \<- 2 \# b \<- -5 \# c \<- -3 \# \# disc \<- b\^2 - 4*a*c \# disc
 
-      # a <- 2
-      # b <- -5
-      # c <- -3
-      # 
-      # disc <- b^2 - 4*a*c
-      # disc
+    \# Your code here to print only real roots
 
-      # Your code here to print only real roots
-```{r}
-a <- 2
-b <- -5
-c <- -3
-x <- 0
+    ```{r}
+    a <- 2
+    b <- -5
+    c <- -3
+    x <- 0
 
-disc <- b^2 - 4*a*c
-if (disc <0) {
-  cat("The descriminet is negitive there for not roots")
-  } else {
-    x1<-1/(2*a)*(-b+sqrt(disc))
-    x2<-1/(2*a)*(-b-sqrt(disc))
-    cat("The roots are x1=" ,x1,"x2 =",x2) }
+    disc <- b^2 - 4*a*c
+    if (disc <0) {
+      cat("The descriminet is negitive there for not roots")
+      } else {
+        x1<-1/(2*a)*(-b+sqrt(disc))
+        x2<-1/(2*a)*(-b-sqrt(disc))
+        cat("The roots are x1=" ,x1,"x2 =",x2) }
 
-```
+    ```
 
 5.  **Graph the quadratic on a specified interval** Make a graph of $f(x)$ versus $x$ for $x \in (-6, 6)$. Add:
 
@@ -113,18 +112,24 @@ if (disc <0) {
 a <- 1
 b <- -2
 c <- -3
+d <- b^2 - 4*a*c
+
+x1 <- (-b+sqrt(d)) / (2*a)
+x2 <- (-b-sqrt(d)) / (2*a)
 
 x <- seq(-6, 6, length.out = 400)
 fx <- a*x^2 + b*x + c
     
 plot(x,fx,type="l",col = "blue",lwd =2)
 abline(h=0)
-points(c(x1,x2),c(0,0),col="red")
+points(c(x1,x2),c(0,0),col="red",pch=19)
 
 ```
 
-    # Hint: use plot(x, fx, type="l") and abline(h=0)
-    ```
+````         
+# Hint: use plot(x, fx, type="l") and abline(h=0)
+```
+````
 
 6.  **Write coefficients to a text file using Unix** Use Unix to create a file `data/coefs.txt` containing a single line with:
 
@@ -134,27 +139,25 @@ points(c(x1,x2),c(0,0),col="red")
 
     Show the Unix commands you used:
 
-    ```         
-    # Your commands here
-    
-    echo "2 -5 -3" data/coefs.txt
-    
-    ```
+```      
+# Your commands here
+
+echo "2 -5 -3" data/coefs.txt #idk how this is wrong becouse that command dose what its saposed to do?
+```
 
 7.  **Copy the Quarto file using Unix** Use Unix to copy `hw1.qmd` into `code/` and name it `quadratic.qmd`. Show the Unix command(s):
 
     ```         
     # Your commands here
-    
+
     cp hw/hw1.qmd code/quadratic.qmd #need to do directory(the pathing to the thing)
-    
     ```
 
 8.  **Read coefficients from file using a relative path**
 
     Edit `code/quadratic.qmd` so it reads `a`, `b`, `c` from `data/coefs.txt` using a **relative path**. In *this* document, show the R code you used (it should also appear in `quadratic.qmd`).
 
-```{r}        
+```{r}
 # Your code here (example outline):
 
 coefs <- scan("data/coefs.txt") #read numbers/string and return a vector
@@ -180,11 +183,8 @@ if (disc <0) {
 
     In `code/quadratic.qmd`, replace the relative path with: `file.path(getwd(), "data/coefs.txt")` Render it once to confirm it works.
 
-    Then Copy the entire project folder** to a new folder name (e.g., `RtmpXXXX`). Re-render `code/quadratic.qmd`. Does it still render? Briefly explain what happened, then switch back to a relative path and confirm it renders again.
-  ```
-  #its the cp - r thing again 
-  and it still works it dosent matter where the directory is
-  
+    Then Copy the entire project folder\*\* to a new folder name (e.g., `RtmpXXXX`). Re-render `code/quadratic.qmd`. Does it still render? Briefly explain what happened, then switch back to a relative path and confirm it renders again. \`\`\` #its the cp - r thing again and it still works it dosent matter where the directory is
+
 ```{r}
 coefs <- scan(file.path(getwd(),"data/coefs.txt"))
 a <- coefs[1]
@@ -199,16 +199,16 @@ disc <- b^2 - 4*a*c
 
     Render a PDF version of `hw1.qmd` (or `code/quadratic.qmd`) and place the PDF into `docs/`. Show the terminal command(s) you typed:
 
-    ```         
-    # Your command here, e.g.
-    # quarto render hw1.qmd --to pdf --output-dir docs
-    ```
+```     
+# Your command here, e.g.
+quarto render hw1.qmd --to pdf --output-dir docs
+    
+    
+```
 
 11. **Git workflow** Make at least **three commits** with meaningful messages, such as:
 
 -   `Add initial project structure`
-
-
 
 -   `Add quadratic root computation`
 
@@ -216,11 +216,15 @@ disc <- b^2 - 4*a*c
 
     In this document, paste the output of:
 
-    ```         
-    git log --oneline --decorate -n 5
-    ```
+```         
+git log --oneline --decorate -n 5
+
+fb99bd9 my first homwork # in this class
+93461ef add inital prodject structure
+59fbac1 my added render # i failed at this
+```
 
 12. **Push to GitHub** Push your work to GitHub. In this document, include:
 
 -   a screenshot of your GitHub repo showing the folders `img/`, `data/`, `code/`, `docs/`
--   the link to the rendered PDF file in your repo 
+-   the link to the rendered PDF file in your repo
