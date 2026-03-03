@@ -15,6 +15,8 @@ Make sure to use **vectorization** whenever possible (avoid loops unless explici
 ```{r}
 # Load only the allowed package
 library(dslabs)
+data(murders)
+str(murders)
 ```
 
 ## 1
@@ -26,7 +28,7 @@ What is the sum of the first 150 positive integers? Use the functions `seq` and 
 n <- 150
 
 # Step 2: create the sequence 1, 2, ..., n
-x <- 1+2+3+4
+x <- seq(1,n)
 
 # Step 3: compute the sum of x
 ans <- sum(x)
@@ -45,21 +47,28 @@ Load the `murders` dataset from **dslabs**. Use the function `str` to examine th
 
 ```{r}
 # Examine structure
-str(murders)
-
+head(murders)
 # Step: print the column names
 # names(murders)
+ #data.frame':	51 obs. of  5 variables:
+ #$ state     : chr  "Alabama" "Alaska" "Arizona" "Arkansas" ...
+ #$ abb       : chr  "AL" "AK" "AZ" "AR" ...
+ #$ region    : Factor w/ 4 levels "Northeast","South",..: 2 4 4 2 4 4 1 2 2 2 ...
+ #$ population: num  4779736 710231 6392017 2915918 37253956 ...
+ #$ total     : num  135 19 232 93 1257 ...
 ```
 
 ```{r}
 # Step 1: compute murder rate per 100,000 into a vector called rate
-# rate <- 
+
+rate <- murders$total / murders$population * 100000
+
 
 # Step 2: create a logical vector called idx for states with rate < 1.2
-# idx <- 
+idx <- rate < 1.2
 
 # Step 3: subset murders using idx
-# murders[idx, ]
+murders[idx, ]
 ```
 
 ## 3
@@ -68,20 +77,20 @@ Show the subset of `murders` showing states with **less than 1.2 per 100,000** d
 
 ```{r}
 # Step 1: compute rate (or reuse from Q2)
-# rate <- 
+rate <- murders$total / murders$population * 100000
 
 # Step 2: create logical vectors low and ne
-# low <- 
-# ne <- 
+low <- rate < 1.2
+ne <- murders$region == "Northeast"
 
 # Step 3: combine conditions into keep
-# keep <- 
+keep <- low & ne
 
 # Step 4: subset and remove region column
-# out <- 
-# out_no_region <- 
+out <- murders[keep, ]
+out_no_region <- out[-which(names(out) == "region")]
 
-# out_no_region
+out_no_region
 ```
 
 ## 4
@@ -90,17 +99,17 @@ Among states with a murder rate less than 1.2 per 100,000, show the **smallest p
 
 ```{r}
 # Step 1: compute rate
-# rate <- 
+rate <- murders$total / murders$population * 100000 
 
 # Step 2: restrict to low-rate states
-# low <- 
+low <- rate < 1.2
 
 # Step 3: find the row index of the smallest population among those
 # Hint: use which(low) and which.min(...)
-# i <- 
+i <- which(low)[which.min(murders$population[low])]
 
 # Step 4: report as a small data frame with columns state, population, rate
-# data.frame(...)
+data.frame(state = murders$state[i],population = murders$population[i],rate = rate[i])
 ```
 
 ## 5
@@ -109,16 +118,16 @@ Show the state with a population of **more than 8 million** with the **lowest** 
 
 ```{r}
 # Step 1: compute rate
-# rate <- 
+rate <- murders$total / murders$population * 100000 
 
 # Step 2: create logical vector big for population > 8 million
-# big <- 
+big <- murders$population > 8000000
 
 # Step 3: find the row index i of the smallest rate among big-pop states
-# i <- 
+I <- which(big)[which.min(rate[big])]
 
 # Step 4: report state, population, rate
-# data.frame(...)
+data.frame(state = murders$state[I],population = murders$population[I],rate = rate[I])
 ```
 
 ## 6
@@ -127,17 +136,17 @@ Compute the murder rate for each **region** of the US (total murders divided by 
 
 ```{r}
 # Step 1: compute total murders by region
-# murders_by_region <- tapply( , , sum)
+murders_by_region <- tapply(murders$total,murders$region,sum)
 
 # Step 2: compute total population by region
-# pop_by_region <- tapply( , , sum)
+pop_by_region <- tapply(murders$population,murders$region,sum)
 
 # Step 3: compute rates
-# rate_by_region <- 
+rate_by_region <- murders_by_region / pop_by_region * 100000
 
 # Step 4: make a data frame with region names and rates
-# region_rates <- data.frame(...)
-# region_rates
+region_rates <- data.frame(region = names(rate_by_region),rate = rate_by_region)
+region_rates
 ```
 
 ## 7
@@ -153,13 +162,13 @@ end <- 60
 step <- 3/8
 
 # Step 2: create the sequence v
-# v <- 
+v <- seq(start,end,step)
 
 # Step 3: show the first 6 values
-# head(v)
+head(v)
 
 # Step 4: show the length
-# length(v)
+length(v)
 ```
 
 ## 8
@@ -178,10 +187,10 @@ Add a new column called `temperature_c` containing the temperatures in Celsius. 
 
 ```{r}
 # Step 1: compute Celsius using (F - 32) * 5/9
-# city_temps$temperature_c <- 
+city_temps$temperature_c <- (temp_f - 32) * 5/9
 
 # Step 2: print city_temps
-# city_temps
+city_temps
 ```
 
 ## 9
@@ -198,13 +207,15 @@ Test your function at `n = 10` and `n = 100`.
 # Step 1: write the function
 euler2 <- function(n) {
   # Step: create k <- 1:n
+k <- 1:n
   # Step: compute terms <- 1/(k^2)
+terms <- 1 / (k^2)
   # Step: return sum(terms)
-}
+sum(terms)}
 
 # Step 2: test
-# euler2(10)
-# euler2(100)
+euler2(10)
+euler2(100)
 ```
 
 ## 10
@@ -213,16 +224,16 @@ Plot $S_n$ versus $n$ for $n = 1,2,\dots,2000$ with a horizontal **dashed** line
 
 ```{r}
 # Step 1: create n_vals <- 1:2000
-# n_vals <- 
+n_vals <- 1:2000
 
 # Step 2: compute S for each n using sapply
-# S <- 
+S <- sapply(n_vals,euler2)
 
 # Step 3: plot
-# plot(n_vals, S, type="l", xlab="n", ylab="S_n")
+plot(n_vals, S, type="l", xlab="n", ylab="S_n")
 
 # Step 4: add dashed line at pi^2/6
-# abline(h = , lty = 2)
+abline(h = pi^2/6, lty = 2)
 ```
 
 ## 11
@@ -233,10 +244,10 @@ Use `%in%` and `state.abb` to create a logical vector for: AL, AK, AZ, AR, AA.
 test <- c("AL", "AK", "AZ", "AR", "AA")
 
 # Step 1: create is_real
-# is_real <- 
+is_real <- test %in% state.abb
 
 # Step 2: print is_real
-# is_real
+is_real
 ```
 
 ## 12
@@ -247,13 +258,13 @@ Report the one entry that is **not** an actual abbreviation.
 test <- c("AL", "AK", "AZ", "AR", "AA")
 
 # Step 1: create not_real using !
-# not_real <- 
+not_real <- test %in% state.abb
 
 # Step 2: find index with which()
-# idx <- 
+idx <- test != state.abb
 
 # Step 3: print the entry
-# test[idx]
+test[idx]
 ```
 
 ## 13
@@ -264,13 +275,13 @@ Using `%in%`, show all variables for Florida, California, and New York, **in tha
 targets <- c("Florida", "California", "New York")
 
 # Step 1: subset murders to those states
-# sub <- 
+sub <- murders[murders$state %in% targets, ]
 
 # Step 2: reorder rows using match()
-# sub_ordered <- 
+sub_ordered <- sub[match(targets,sub$state)]
 
 # Step 3: print sub_ordered
-# sub_ordered
+sub_ordered
 ```
 
 ## 14
@@ -282,11 +293,13 @@ Restrictions: no loop.
 ```{r}
 vander_helper <- function(x, n) {
   # Step: create exponents 0:n
+expo <- 0:n
   # Step: return x^(0:n)
+return(x^expo)
 }
 
 # Test:
-# vander_helper(2, 6)
+vander_helper(2, 6)
 ```
 
 ## 15
@@ -309,27 +322,27 @@ Then compare empirical proportions to the geometric prediction for run lengths 1
 
 ```{r}
 # Step 1: compute r <- rle(x)
-# r <- 
+r <- rle(x)
 
 # Step 2: extract ones_lengths (lengths where values == 1)
-# ones_lengths <- 
+ones_lengths <- r$lengths[r$values == 1]
 
 # Step 3: plot distribution (hist or barplot)
-# hist(ones_lengths, breaks = 30)
+hist(ones_lengths, breaks = 30)
 
 # Step 4: empirical proportions for k=1:8
-# tab <- table(ones_lengths)
-# emp_counts <- as.numeric(tab[as.character(1:8)])
-# emp_counts[is.na(emp_counts)] <- 0
-# emp_probs <- emp_counts / length(ones_lengths)
+tab <- table(ones_lengths)
+emp_counts <-  as.numeric(tab[as.character(1:8)])
+emp_counts[is.na(emp_counts)] <- 0
+emp_probs <- emp_counts / length(ones_lengths)
 
 # Step 5: theoretical probabilities (1-p)*p^(k-1)
-# k <- 1:8
-# theory_probs <- 
+k <- 1:8
+theory_probs <- (1-p) * p^(k-1)
 
 # Step 6: make a comparison data frame
-# comparison <- data.frame(run_length = k, empirical_prob = emp_probs, theory_prob = theory_probs)
-# comparison
+comparison <- data.frame(run_length = k, empirical_prob = emp_probs, theory_prob = theory_probs)
+comparison
 ```
 
 ## 16
@@ -347,20 +360,21 @@ Then show a `table()` of the labels.
 
 ```{r}
 # Step 1: state-level rate
-# rate <- 
+rate <- murders$total / murders$population * 100000 
 
 # Step 2: national average rate
-# national_rate <- 
+national_rate <- (murders$total) / (murders$population) * 100000 
 
 # Step 3: logical vectors high_crime and high_pop
-# high_crime <- 
-# high_pop <- 
+high_crime <- rate > national_rate 
+high_pop <- tapply(murders$population,murders$state,sum)
 
 # Step 4: labels using nested ifelse
-# labels <- 
+labels <- ifelse (high_crime & high_pop,"high crime, high pop",  
+  ifelse (high_crime & !high_pop,"high crime,low pop","lower crime"))
 
 # Step 5: table(labels)
-# table(labels)
+table(labels)
 ```
 
 ## 17
@@ -371,16 +385,16 @@ Show your work using `order` (and optionally check with `sort` or `rank`).
 
 ```{r}
 # Step 1: rate vector
-# rate <- 
+rate <- murders$total / murders$population * 100000 
 
-# Step 2: ord <- order(rate, decreasing = TRUE)
-# ord <- 
+# Step 2: 
+ord <- order(rate, decreasing = TRUE)
 
-# Step 3: i <- ord[12]
-# i <- 
+# Step 3: 
+i <- ord[12]
 
 # Step 4: report state and rate
-# data.frame(state = murders$state[i], rate = rate[i])
+data.frame(state = murders$state[i], rate = rate[i])
 ```
 
 ## 18
@@ -390,12 +404,15 @@ Write a function `compute_harmonic_mean` that returns the harmonic mean of a num
 ```{r}
 compute_harmonic_mean <- function(x) {
   # Step 1: if any x <= 0, return NA
+if (any(x == 0)) {return(NA)}
   # Step 2: compute n <- length(x)
+n <- length(x)
   # Step 3: return n / sum(1/x)
+n / sum(1/x)
 }
 
 # Test:
-# compute_harmonic_mean(c(1, 2, 4, 8))
+compute_harmonic_mean(c(1, 2, 4, 8))
 ```
 
 ## 19
@@ -410,15 +427,20 @@ y <- c(2, 0, 5)
 ```{r}
 safe_divide <- function(x, y) {
   # Step 1: compute out <- x/y
+out <- x/y
   # Step 2: convert to character so you can store the message
+out <- as.character(out)
   # Step 3: replace entries where y == 0
+out[y == 0] <- "cant divide"
+
+out
 }
 
 # Test:
-# x <- c(10, 20, 30)
-# y <- c(2, 0, 5)
-# safe_divide(x, y)
-```
+x <- c(10, 20, 30)
+y <- c(2, 0, 5)
+safe_divide(x, y) # i cant make it do the thing so i had to use chatgpt for this answer
+``` 
 
 ## 20
 
@@ -436,28 +458,32 @@ Then use `sapply` to classify all states and use `table()` to count how many fal
 
 ```{r}
 # Step 1: compute a named vector of rates
-# rate <- murders$total / murders$population * 100000
-# rate_named <- setNames(rate, murders$state)
+rate <- murders$total / murders$population * 100000
+rate_named <- setNames(rate, murders$state)
 
 classify_state_safety <- function(state_name) {
   # Step 2: check if state_name is in names(rate_named)
+if (!(state_name %in% names(rate_named))){return("state not found")}
   # Step 3: pull out r <- rate_named[state_name]
+r <- rate_named[state_name]
   # Step 4: return the correct label using if/else
+if (r<1){"very safe"} else if (r<3) {"safe"}
+else if (r<5) {"moderate"} else {"high risk"}
 }
 
 # Tests:
-# classify_state_safety("Vermont")
-# classify_state_safety("Texas")
-# classify_state_safety("California")
-# classify_state_safety("NotAState")
+classify_state_safety("Vermont")
+classify_state_safety("Texas")
+classify_state_safety("California")
+classify_state_safety("NotAState")
 ```
 
 ```{r}
 # Step 5: classify all states with sapply
-# cats <- sapply(murders$state, classify_state_safety)
+cats <- sapply(murders$state, classify_state_safety)
 
 # Step 6: count categories
-# table(cats)
+table(cats)
 ```
 
 ## Convert to  a PDF file
@@ -465,6 +491,7 @@ In a (Linux terminal), run the following command (install any missing packages o
 
 ```
 # change path_to_hw2.qmd to something like hw/hw2.qmd if the current directory is a parent diretory of hw/
+render(hw2 save.qmd,output_format=pdf_document)
 
-quarto render path_to_hw2.qmd --to pdf 
+#quarto render path_to_hw2.qmd --to pdf 
 ```
