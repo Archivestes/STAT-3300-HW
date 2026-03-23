@@ -258,10 +258,10 @@ Report the one entry that is **not** an actual abbreviation.
 test <- c("AL", "AK", "AZ", "AR", "AA")
 
 # Step 1: create not_real using !
-not_real <- test %in% state.abb
+not_real <- !(test %in% state.abb)
 
 # Step 2: find index with which()
-idx <- test != state.abb
+idx <- which(not_real)
 
 # Step 3: print the entry
 test[idx]
@@ -363,15 +363,15 @@ Then show a `table()` of the labels.
 rate <- murders$total / murders$population * 100000 
 
 # Step 2: national average rate
-national_rate <- (murders$total) / (murders$population) * 100000 
+national_rate <- sum(murders$total) / sum(murders$population) * 100000 
 
 # Step 3: logical vectors high_crime and high_pop
 high_crime <- rate > national_rate 
-high_pop <- tapply(murders$population,murders$state,sum)
+high_pop <- murders$population > 6e6
 
 # Step 4: labels using nested ifelse
-labels <- ifelse (high_crime & high_pop,"high crime, high pop",  
-  ifelse (high_crime & !high_pop,"high crime,low pop","lower crime"))
+labels <- ifelse(high_crime & high_pop,"high crime, high pop",  
+  ifelse(high_crime & !high_pop,"high crime,low pop","lower crime"))
 
 # Step 5: table(labels)
 table(labels)
