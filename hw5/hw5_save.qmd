@@ -1,0 +1,289 @@
+---
+title: hw5
+date: "4/15/26"
+execute: 
+  eval: true
+---
+```{r}
+```
+[Download source](https://raw.githubusercontent.com/ywanglab/STAT3000/refs/heads/main/psets/hw5.qmd)
+
+This problem set explores probability through two settings: repeated dice rolls and American roulette. You will use both Monte Carlo simulation and exact mathematical calculations to understand these models.
+
+Please answer each of the exercises below. For those asking for a mathematical calculation, use LaTeX to show your work.
+
+Important: Make sure that your document renders in less than 5 minutes.
+
+## Part I: Rolling two dice
+
+1. Write a function called `double_six` that takes a number `n` as an argument, simulates rolling two fair dice `n` times, and returns `TRUE` if at least one of the `n` rolls is a double-six.
+
+   Hint: generate two vectors of rolls and check whether any pair equals `(6, 6)`.
+
+```{r}
+double_six <- function(n){
+  ## Your code here
+  die1 <- sample(1:6,n,replace = TRUE)
+  die2 <- sample(1:6,n,replace = TRUE)
+  any(die1 == 6 & die2 == 6)}
+```
+
+2. Suppose you roll two fair dice 24 times. If we define success to mean seeing at least one double-six, what is the estimated probability of success? Use a Monte Carlo simulation with `B = 1000` trials based on the function `double_six` from the previous exercise.
+
+```{r}
+B <- 10^3
+n <- 24
+## Your code here
+results <- replicate(B,double_six(n))
+mean(results)
+```
+
+3. Redo the previous exercise for several values of `n` to determine at what number of rolls the probability becomes greater than 50%. Set the seed at 1997.
+
+```{r}
+set.seed(1997)
+compute_prob <- function(n, B = 10^3){
+  mean(replicate(B,double_six(n)))}
+
+n_vals <- 1:60
+## Your code here
+probs <- sapply(n_vals,compute_prob)
+```
+
+4. These probabilities can be computed exactly instead of relying on Monte Carlo approximations. Since the probability of not getting a double-six on a single roll is `35/36`, we have
+
+$$
+\Pr(\text{at least one double-six in } n \text{ rolls})
+= 1 - \left(\frac{35}{36}\right)^n.
+$$
+
+Plot the probabilities you obtained using Monte Carlo as points and the exact probabilities with a red line.
+
+```{r}
+exact_prob <- function(n){
+  ## Your code here
+  1 - (35/36)^n}
+
+## Your code here
+exact_prob <- sapply(n_vals,exact_prob)
+plot(n_vals,probs,
+     pch = 16,
+     xlab = "Number of Rolls (n)",
+     ylab = "Probability",
+     main = "Monte Carlo vs Exact Probability")
+lines(n_vals,exact_prob,col = "red",lwd = 2)
+```
+
+5. The Monte Carlo points in question 4 will not exactly match the red curve because the simulation uses only 1,000 iterations. Repeat exercise 2 for `n = 24`, but now try `B <- seq(10, 250, 5)^2` iterations. Plot the estimated probability against `sqrt(B)`. At what value of `sqrt(B)` do the estimates consistently stay within `0.005` of the exact probability? Add horizontal lines at the exact probability plus and minus `0.005`. Set the seed to 1998.
+
+```{r}
+set.seed(1998)
+B <- seq(10, 250, 5)^2
+n <- 24
+## Your code here
+exact <- 1 - (35/36)^24
+estimates <- sapply(B,function(b){
+  mean(replicate(b,double_six(n)))})
+```
+
+6. Repeat the comparison from question 4 (Monte Carlo points versus exact red line), but now use your findings from question 5 to choose an appropriate value of `B` so that the points practically fall on the red curve.
+
+   Hint: choose a value of `B` that is large enough for a good plot, but not so large that your document takes too long to render.
+
+```{r}
+n_vals <- 1:60
+## Your code here
+B <- 20000
+probs <- sapply(n_vals, function(n){
+  die1 <- matrix(sample(1:6, n * B, replace = TRUE), nrow = B)
+  die2 <- matrix(sample(1:6, n * B, replace = TRUE), nrow = B)
+  mean(rowSums(die1 == 6 & die2 == 6) > 0)})
+```
+
+## Part II: American roulette
+
+In American roulette there are 38 slots total: 18 red, 18 black, and 2 green.
+
+7. If a player bets $1 on red, what is the probability that the casino wins the bet?
+
+$$
+P(\text{casino wins}) = P(X = 1) = /frac{20}{38}
+$$
+
+8. If a player bets $1 on red, the casino's profit from that single bet is represented by the random variable $X$:
+
+- $X = -1$ if the ball lands on red,
+- $X = +1$ otherwise.
+
+Create a sampling model for `X` using the `sample` function.
+
+```{r}
+## Your code here
+X <- sample(c(-1,1),size = 1,replace = TRUE, prob = c(18/38,20/38))
+replicate(10, sample(c(-1,1), size = 1, replace = TRUE, prob = c(18/38,20/38)))
+```
+
+9. Now create a random variable $S$ for the casino's total profit if `n = 1000` people each make a $1 bet on red. Use Monte Carlo simulation with `B = 10000` trials to estimate the probability that the casino loses money.
+
+```{r}
+n <- 1000
+B <- 10^4
+## Your code here
+one_trial <- function(n){
+  sum(sample(c(-1, 1), size = n, replace = TRUE,
+             prob = c(18/38, 20/38)))}
+S_vals <- replicate(B, 
+  sum(sample(c(-1,1), size = n, replace = TRUE,
+             prob = c(18/38, 20/38))))
+mean(S_vals < 0)
+```
+
+10. What is the expected value of $X$?
+
+$$
+E[X] = (-1)\cdot \frac{18}{38} + (1)\cdot \frac{20}{38}
+= \frac{-18 + 20}{38}
+= \frac{2}{38}
+= \frac{1}{19}
+$$
+
+11. What is the standard error of $X$?
+
+$$
+\mathrm{SE}(X) = \sqrt{\mathrm{Var}(X)} = \sqrt{E[X^2] - (E[X])^2}
+$$
+
+$$
+E[X^2] = 1
+$$
+
+$$
+\mathrm{Var}(X) = 1 - \left(\frac{1}{19}\right)^2
+= 1 - \frac{1}{361}
+= \frac{360}{361}
+$$
+
+$$
+\mathrm{SE}(X) = \sqrt{\frac{360}{361}} = \frac{\sqrt{360}}{19}
+$$
+
+12. What is the expected value of $S$? Does the Monte Carlo simulation confirm this?
+
+$$
+S = X_1 + X_2 + \cdots + X_{1000}
+$$
+
+$$
+E[S] = \sum_{i=1}^{1000} E[X_i] = 1000 \cdot E[X]
+$$
+
+$$
+E[S] = 1000 \cdot \frac{1}{19} = \frac{1000}{19} \approx 52.63
+$$
+
+```{r}
+## Your code here
+set.seed(123)
+n <- 1000
+B <- 10^4
+S_vals <- replicate(B, {
+  sum(sample(c(-1, 1), size = n, replace = TRUE,
+             prob = c(18/38, 20/38)))})
+mean(S_vals)
+```
+
+13. What is the standard error of $S$? Does the Monte Carlo simulation confirm this?
+
+$$
+S = X_1 + X_2 + \cdots + X_{1000}
+$$
+
+$$
+\mathrm{Var}(S) = \sum_{i=1}^{1000} \mathrm{Var}(X_i)
+= 1000 \cdot \mathrm{Var}(X)
+$$
+
+$$
+\mathrm{Var}(X) = \frac{360}{361}
+$$
+
+$$
+\mathrm{SE}(S) = \sqrt{1000 \cdot \frac{360}{361}}
+$$
+
+```{r}
+## Your code here
+set.seed(123)
+n <- 1000
+B <- 10^4
+S_vals <- replicate(B, {
+  sum(sample(c(-1, 1), size = n, replace = TRUE,
+             prob = c(18/38, 20/38)))})
+sd(S_vals)
+```
+
+14. Use data visualization to convince yourself that the distribution of $S$ is approximately normal. Make a histogram and a QQ-plot of the standardized values of $S$. The QQ-plot should be close to the identity line.
+
+```{r}
+## Your code here
+set.seed(123)
+n <- 1000
+B <- 10^4
+S_vals <- replicate(B, {
+  sum(sample(c(-1, 1), size = n, replace = TRUE,
+             prob = c(18/38, 20/38)))})
+mu_S <- n * (1/19)
+se_S <- sqrt(n * (360/361))
+Z <- (S_vals - mu_S) / se_S
+```
+
+15. The normal approximation will not be perfect in the tails. What would improve the approximation more: increasing the number of people playing `n`, or increasing the number of Monte Carlo iterations `B`? Explain your reasoning.
+
+**Answer here**
+```
+n improves how well the distribution of 
+S is approximated by a normal distribution.
+B only improves how accurately you estimate or visualize that distribution.
+```
+
+16. Use the Central Limit Theorem to approximate the probability that the casino loses money. Does your CLT approximation agree with the Monte Carlo estimate from question 9?
+
+$$
+P(S < 0) = P\left(\frac{S - E[S]}{\mathrm{SE}(S)} < \frac{-E[S]}{\mathrm{SE}(S)}\right)
+$$
+
+$$
+P(S < 0) \approx \Phi\left(\frac{-E[S]}{\mathrm{SE}(S)}\right)
+$$
+
+```{r}
+## Your code here
+n <- 1000
+mu_X <- 1/19
+var_X <- 360/361
+mu_S <- n * mu_X
+se_S <- sqrt(n * var_X)
+clt_prob <- pnorm(0, mean = mu_S, sd = se_S)
+clt_prob
+```
+
+17. What is the minimum number of people `n` who must each bet $1 on red so that the probability the casino loses money is approximately 1% according to the CLT? Check your answer with a Monte Carlo simulation.
+
+$$
+\text{Your derivation here}
+$$
+
+```{r}
+## Your code here
+mu_X <- 1/19
+sigma_X <- sqrt(360/361)
+z <- qnorm(0.01)
+n_min <- (z * sigma_X / mu_X)^2
+n_min
+set.seed(123)
+B <- 10000
+S_vals <- replicate(B, {
+  sum(sample(c(-1, 1), size = n_min, replace = TRUE,
+             prob = c(18/38, 20/38)))})
+mean(S_vals < 0)
+```
