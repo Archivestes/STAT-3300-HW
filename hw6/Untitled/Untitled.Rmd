@@ -1,0 +1,167 @@
+---
+title: "Introduction to Linear Regression"
+output: pdf
+html_document:
+toc: true
+toc_float: true
+---
+
+```{r}
+library(tidyverse)
+library(openintro)
+library(statsr)
+library(broom)
+```
+
+# The Data
+
+### 1. Dimensions of the dataset
+
+```{r}
+dim(hfi)
+```
+
+
+The dataset contains many rows and columns representing country-year observations. Each row corresponds to a specific country in a given year.
+
+---
+
+### 2. Filter data for 2016
+
+```{r}
+hfi_2016 <- hfi |>
+  filter(year == 2016) |>
+  select(countries, year, pf_score, pf_expression_control)
+
+head(hfi_2016)
+```
+
+---
+
+### 3. Relationship between variables
+
+```{r}
+ggplot(hfi_2016, aes(x = pf_expression_control, y = pf_score)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+```{r}
+hfi_2016 |>
+  summarise(correlation = cor(pf_expression_control, pf_score, use = "complete.obs"))
+```
+
+
+The relationship between `pf_expression_control` and `pf_score` appears to be positive, approximately linear, and moderately strong. This suggests that a linear model is appropriate for describing the relationship.
+
+---
+
+# Sum of Squared Residuals
+
+### 4. 
+
+The relationship between `pf_expression_control` and `pf_score` is positive, meaning that as political expression freedom increases, personal freedom also increases. The form appears roughly linear, and the strength of the relationship is moderate to strong. There are no obvious extreme outliers.
+
+---
+
+### 5. 
+
+After trying multiple lines using the interactive function, the smallest sum of squared residuals observed was approximately 0.8450646. This represents the best-fitting line among those tested.
+
+---
+
+# The Linear Model
+
+### Fit the model
+
+```{r}
+m1 <- lm(pf_score ~ pf_expression_control, data = hfi_2016)
+tidy(m1)
+glance(m1)
+```
+
+---
+
+### Regression equation
+
+[
+\hat{pf_score} = 4.28 + 0.542 \cdot pf_expression_control
+]
+
+---
+
+### Interpretation
+
+* **Intercept:** When `pf_expression_control = 0`, the predicted personal freedom score is 4.28.
+* **Slope:** For every 1-unit increase in `pf_expression_control`, the predicted personal freedom score increases by 0.542.
+* **R²:** Approximately 71.4% of the variability in `pf_score` is explained by `pf_expression_control`.
+
+---
+
+### 6. New model (note on dataset)
+
+The dataset used does not include `hf_score`, so a model predicting total human freedom cannot be fit with the available variables. Therefore, analysis is limited to `pf_score`.
+
+---
+
+# Prediction and Errors
+
+### 7. x = 3
+
+```{r}
+4.28 + 0.542 * 3
+```
+
+The predicted personal freedom score for a country with `pf_expression_control = 3` is approximately **5.91**.
+
+The residual is calculated as:
+
+[
+\text{residual} = \text{actual} - 5.91
+]
+
+If the actual value is greater than 5.91, the model underestimates; if it is lower, the model overestimates.
+
+---
+
+# Model Diagnostics
+
+```{r}
+m1_aug <- augment(m1)
+```
+
+---
+
+### 8.
+
+```{r}
+ggplot(m1_aug, aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  geom_smooth(se = FALSE)
+```
+
+There is no clear pattern in the residuals. The points are randomly scattered around zero, indicating that the linearity assumption is satisfied.
+
+---
+
+### 9.
+
+```{r}
+ggplot(m1_aug, aes(x = .resid)) +
+  geom_histogram(binwidth = 0.25)
+```
+
+The residuals appear approximately symmetric and centered around zero, suggesting that the nearly normal condition is not violated.
+
+---
+
+### 10.
+
+The spread of residuals appears relatively constant across fitted values, with no clear funnel shape. This indicates that the constant variability assumption is satisfied.
+
+---
+
+# Conclusion
+
+The linear model describing the relationship between `pf_expression_control` and `pf_score` appears appropriate. All major assumptions (linearity, normality, and constant variability) are reasonably satisfied. Therefore, the model provides a reliable way to describe and predict personal freedom based on political expression control.

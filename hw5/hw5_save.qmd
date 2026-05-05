@@ -1,11 +1,8 @@
 ---
 title: hw5
 date: "4/15/26"
-execute: 
-  eval: true
+format: pdf
 ---
-```{r}
-```
 [Download source](https://raw.githubusercontent.com/ywanglab/STAT3000/refs/heads/main/psets/hw5.qmd)
 
 This problem set explores probability through two settings: repeated dice rolls and American roulette. You will use both Monte Carlo simulation and exact mathematical calculations to understand these models.
